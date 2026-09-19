@@ -128,7 +128,7 @@ def chunk_documents(raw_documents):
 
 def get_vector_store(api_key):
     embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/text-embedding-004", google_api_key=api_key
+        model="models/gemini-embedding-001", google_api_key=api_key
     )
     return InMemoryVectorStore(embeddings)
 
