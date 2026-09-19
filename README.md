@@ -107,11 +107,12 @@ auto-redeploys. No manual redeploy step needed.
 
 ## How it works
 1. PDF is split into ~1000-character chunks.
-2. Each chunk is converted to a vector using Google's `embedding-001` model.
+2. Each chunk is converted to a vector using Google's `gemini-embedding-001` model.
 3. Your question is also converted to a vector; the most similar chunks are
    retrieved via semantic search.
-4. Those chunks + your question go to Gemini (`gemini-1.5-flash` or
-   `gemini-1.5-pro`), which must answer using only that context.
+4. Those chunks + your question go to Gemini (`gemini-flash-latest` or
+   `gemini-pro-latest` — Google's aliases that always point to their current
+   stable model), which must answer using only that context.
 
 ## Limitations to know before you demo this
 - Gemini's free tier has rate limits — heavy/rapid use will hit them.
@@ -122,3 +123,12 @@ auto-redeploys. No manual redeploy step needed.
   embedding rate limits.
 - On Streamlit Community Cloud, the app sleeps after inactivity and takes
   a few seconds to wake up on the next visit — normal for the free tier.
+- The assistant only answers using text found in the uploaded PDF. It will
+  correctly say "I don't know" to opinion questions (e.g. "is this a good
+  resume?") — that's expected behavior, not a bug.
+- **Google renames/retires model names often.** This project has already
+  been updated twice for exactly that reason (old embedding and chat model
+  names stopped working). If you get a `404` or `models/... is not found`
+  error in the future, the model name changed again — check
+  https://ai.google.dev/gemini-api/docs/models for the current name and
+  swap it into `rag_assistant.py`.
