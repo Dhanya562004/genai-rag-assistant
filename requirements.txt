@@ -4,3 +4,4 @@ langchain-core
 langchain-community
 langchain-google-genai
 pdfplumber
+langchain-google-genai>=2.0.0
