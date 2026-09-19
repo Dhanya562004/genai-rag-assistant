@@ -1,99 +1,124 @@
-# deepseek-rag-agent
+# GenAI RAG Assistant (Google Gemini)
 
-# 🧠 DeepSeek Code Companion
+A PDF question-answering assistant. Upload a PDF, ask questions, get
+answers grounded in that document. Uses Google Gemini for both embeddings
+and chat — no local model server needed.
 
-DeepSeek is an AI-powered code companion designed to assist with coding, debugging, and providing solutions to programming problems. It uses the Ollama API and LangChain framework to generate helpful responses based on user input.
-![image](https://github.com/user-attachments/assets/81231bf2-5add-4333-b4b7-50cdd327c5ff)
-
-![image](https://github.com/user-attachments/assets/3266ec64-5e7c-471e-83c1-93e996f06fcc)
-
-![image](https://github.com/user-attachments/assets/63088b66-b517-4b28-b1c7-3a43237ca63c)
-
-![image](https://github.com/user-attachments/assets/465da0be-f4a9-4775-9c74-4235817e6761)
-
-![image](https://github.com/user-attachments/assets/06e1a0e8-113e-4a21-87c9-93c6c74fc936)
-
-![image](https://github.com/user-attachments/assets/88de15bf-d2bf-439e-9d3f-496d4605dccf)
-
-![image](https://github.com/user-attachments/assets/424bc3d3-e9a0-4120-b98d-cc43981e78ec)
-
-![image](https://github.com/user-attachments/assets/a1fcc350-75b3-41e4-9040-4d674e90e6ba)
-
-## 🚀 Features
-
-- **Python Expertise**: Provides solutions, code snippets, and explanations for Python-related queries.
-- **Debugging Assistance**: Helps identify and debug issues in your code with useful print statements and suggestions.
-- **Code Documentation**: Automatically generates explanations and comments for code.
-- **Solution Design**: Offers high-level design and architectural suggestions for software development.
-
-## ⚙️ Prerequisites
-
-Before using this app, make sure you have the following:
-
-- Python 3.7+ installed on your system.
-- [Streamlit](https://streamlit.io/) installed (`pip install streamlit`).
-- [LangChain](https://python.langchain.com/) installed (`pip install langchain`).
-- Ollama's API endpoint running locally on your machine. (You need to install Ollama and run their server on `http://localhost:11434`)
-
-## 🔧 Installation
-
-### 1. Install Dependencies
-
-To get started, install the necessary Python libraries:
-
-```bash
-pip install streamlit langchain langchain_ollama
+## Files in this project
+```
+rag_assistant.py               # the app
+requirements.txt               # dependencies
+.gitignore                     # keeps secrets/junk out of git
+.streamlit/secrets.toml.example  # template for your API key (local use)
+README.md                      # this file
 ```
 
-### 2. Set up Ollama
+---
 
-Make sure you have Ollama installed and running locally. Visit [Ollama's website](https://ollama.ai/) for detailed instructions on installation and configuration.
+## PART 1 — Run it locally
 
-### 3. Clone or Download the Repository
-
-Clone the repository (or create a new file) containing your code.
-
-```bash
-git clone https://github.com/TanushreeSB/deepseek.git
-cd deepseek
+### Step 1: Install Python
+You need Python 3.9 or newer. Check with:
+```
+python --version
 ```
 
-## 🚀 Running the App
+### Step 2: Create a project folder and put these files in it
+Put `rag_assistant.py`, `requirements.txt`, `.gitignore`, and the
+`.streamlit/` folder all in the same directory.
 
-To start the Streamlit app, run:
+### Step 3: (Recommended) Create a virtual environment
+```
+python -m venv venv
+```
+Activate it:
+- Windows: `venv\Scripts\activate`
+- Mac/Linux: `source venv/bin/activate`
 
-```bash
-streamlit run app.py
+### Step 4: Install dependencies
+```
+pip install -r requirements.txt
 ```
 
-This will launch the app in your browser at `http://localhost:8501`.
+### Step 5: Get a Google API key
+1. Go to https://aistudio.google.com/apikey
+2. Sign in, click "Create API Key", copy it
 
-## 🖥️ How It Works
+### Step 6: Give the app your key (pick ONE)
+**Option A — quick, no file needed:**
+Just run the app (Step 7) and paste the key into the sidebar box each time.
 
-- **User Interaction**: The user types a programming-related question in the input box.
-- **AI Response Generation**: The system prompts the Ollama model for an appropriate response, which can be a code solution, debug suggestion, or documentation.
-- **Chat Interface**: All interactions are logged and displayed in a chat-like interface, allowing users to have ongoing conversations with the AI assistant.
+**Option B — don't want to paste it every time:**
+Inside `.streamlit/`, rename `secrets.toml.example` to `secrets.toml`, then
+open it and replace `paste_your_key_here` with your real key:
+```toml
+GOOGLE_API_KEY = "AIza...your real key..."
+```
+The app will now load it automatically — no sidebar typing needed.
+This file is already in `.gitignore` so it won't be accidentally uploaded.
 
-### Configuration Options
-- **Model Selection**: Choose between two pre-configured models: `deepseek-r1:1.5b` or `deepseek-r1:3b`. These models differ in their capability and performance.
-- **Customization**: Modify the system prompt to change how the assistant responds (concise, debug-friendly, etc.).
+### Step 7: Run the app
+```
+streamlit run rag_assistant.py
+```
+It opens automatically at `http://localhost:8501`.
 
-## 💡 Code Explanation
+### Step 8: Use it
+1. Upload a PDF
+2. Wait for "Indexed X chunks..." to appear
+3. Type a question in the chat box at the bottom
 
-### Streamlit Interface
+---
 
-- **Main UI**: The main user interface displays a chat interface for interacting with the AI assistant. It uses Streamlit's layout capabilities for the chat experience.
-  
-- **Sidebar**: Contains options to configure the model and other settings.
+## PART 2 — Deploy it publicly (Streamlit Community Cloud, free)
 
-### Core Components
+### Step 1: Push your project to GitHub
+```
+git init
+git add .
+git commit -m "GenAI RAG Assistant"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main
+```
+**Important:** because `secrets.toml` is in `.gitignore`, your real API key
+will NOT be pushed to GitHub. That's intentional — never commit real keys.
 
-1. **System Message**: The `system_prompt` defines the AI's behavior, guiding it to act as a concise coding assistant.
+### Step 2: Deploy on Streamlit Community Cloud
+1. Go to https://share.streamlit.io
+2. Sign in with GitHub
+3. Click "New app"
+4. Select your repository, branch `main`, and set the main file path to
+   `rag_assistant.py`
+5. Click "Advanced settings" → "Secrets" and paste:
+   ```toml
+   GOOGLE_API_KEY = "AIza...your real key..."
+   ```
+6. Click "Deploy"
 
-2. **Message Log**: All user inputs and AI responses are stored in `st.session_state.message_log`, ensuring the chat history is maintained across interactions.
+Streamlit builds the app from `requirements.txt` and starts it. You'll get
+a public URL like `https://your-app-name.streamlit.app`.
 
-3. **Chat Interface**: A custom chat interface is created using Streamlit components to display both user and AI messages.
+### Step 3: Update the deployed app later
+Any time you `git push` new changes to `main`, Streamlit Cloud
+auto-redeploys. No manual redeploy step needed.
 
-4. **Response Generation**: Upon receiving user input, the app constructs a prompt chain using `LangChain` and sends it to Ollama for processing.
+---
 
-5. **Reset**: A button is provided to clear the chat history and restart the interaction.
+## How it works
+1. PDF is split into ~1000-character chunks.
+2. Each chunk is converted to a vector using Google's `embedding-001` model.
+3. Your question is also converted to a vector; the most similar chunks are
+   retrieved via semantic search.
+4. Those chunks + your question go to Gemini (`gemini-1.5-flash` or
+   `gemini-1.5-pro`), which must answer using only that context.
+
+## Limitations to know before you demo this
+- Gemini's free tier has rate limits — heavy/rapid use will hit them.
+- The vector store is in-memory: restarting the app clears the index, and
+  every user session on the deployed app gets a fresh, separate index (no
+  shared memory between visitors).
+- Large PDFs (100+ pages) are slow to index on the free tier due to
+  embedding rate limits.
+- On Streamlit Community Cloud, the app sleeps after inactivity and takes
+  a few seconds to wake up on the next visit — normal for the free tier.

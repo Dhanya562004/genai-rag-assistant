@@ -1,0 +1,11 @@
+# Never commit real secrets
+.streamlit/secrets.toml
+
+# Local document storage created at runtime
+document_store/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
