@@ -81,9 +81,10 @@ else:
 
 selected_model = st.sidebar.selectbox(
     "Choose Gemini model",
-    ["gemini-1.5-flash", "gemini-1.5-pro"],
+    ["gemini-flash-latest", "gemini-pro-latest"],
     index=0,
-    help="flash = faster & free-tier friendly. pro = higher quality, lower free-tier limits."
+    help="'-latest' aliases auto-point to Google's current stable model, "
+         "so this won't break every time Google retires a specific version."
 )
 
 st.sidebar.divider()
