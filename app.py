@@ -142,7 +142,20 @@ def generate_answer(user_query, context_documents, api_key, model_name):
     )
     chain = prompt | llm
     response = chain.invoke({"user_query": user_query, "document_context": context_text})
-    return response.content
+
+    content = response.content
+    # Newer Gemini models can return content as a list of blocks
+    # (e.g. [{"type": "text", "text": "...", "extras": {...}}]) instead of
+    # a plain string. Unwrap that into clean text either way.
+    if isinstance(content, list):
+        parts = []
+        for block in content:
+            if isinstance(block, dict):
+                parts.append(block.get("text", ""))
+            elif isinstance(block, str):
+                parts.append(block)
+        return "\n".join(p for p in parts if p).strip()
+    return content
 
 
 # ---------------------------------------------------------------------------
